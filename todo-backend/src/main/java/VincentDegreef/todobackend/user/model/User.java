@@ -26,6 +26,11 @@ public class User {
     public User() {
     }
 
+    public User(String Email, String Password){
+        setEmail(Email);
+        setPassword(Password);
+    }
+
     public User(String username, String password, String email) {
         setUsername(username);
         setPassword(password);

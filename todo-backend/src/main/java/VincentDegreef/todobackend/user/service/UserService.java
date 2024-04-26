@@ -17,12 +17,12 @@ public class UserService {
     public UserService() {
     }
 
-    public User CreateUser(User newUser) throws UserServiceException{
+    public User createUser(User newUser) throws UserServiceException{
         if(userRepository.findByUsername(newUser.getUsername()) != null ){
-            throw new UserServiceException("Username already exists", "username");
+            throw new UserServiceException("Username already exists", "error");
         }
         if(userRepository.findByEmail(newUser.getEmail()) != null ){
-            throw new UserServiceException("Email already exists", "email");
+            throw new UserServiceException("Email already exists", "error");
         }
         userRepository.save(newUser);
         return newUser;
@@ -30,7 +30,7 @@ public class UserService {
 
     public List<User> getAllUsers() throws UserServiceException{
         if(userRepository.findAll().isEmpty()){
-            throw new UserServiceException("No users found", "users");
+            throw new UserServiceException("No users found", "error");
         }
         return userRepository.findAll();
     }

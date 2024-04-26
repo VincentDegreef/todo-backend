@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserRestController {
     
     @Autowired
@@ -53,19 +53,11 @@ public class UserRestController {
         return errors;
     }
 
-    public UserRestController() {
-    }
-
-
+    public UserRestController() {}
 
     @GetMapping("")
     public List<User> getAllUsers() throws UserServiceException{
         return userService.getAllUsers();
-    }
-
-    @PostMapping("/create")
-    public User createUser(@Valid @RequestBody User newUser) throws UserServiceException{
-        return userService.CreateUser(newUser);
     }
 
 
