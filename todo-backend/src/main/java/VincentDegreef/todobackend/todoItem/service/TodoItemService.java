@@ -34,4 +34,44 @@ public class TodoItemService {
         userRepository.save(user);
         return newtodoItem;
     }
+
+    public TodoItem setItemInprogress(Long itemId) throws TodoItemServiceException{
+        if(todoItemRepository.findById(itemId).isEmpty()){
+            throw new TodoItemServiceException("Item not found", "itemId");
+        }
+        TodoItem item = todoItemRepository.findById(itemId).get();
+        item.setNotStarted(false);
+        item.setInProgress(true);
+
+        todoItemRepository.save(item);
+        return item;
+    }
+
+    public TodoItem setItemDone(Long itemId) throws TodoItemServiceException{
+        if(todoItemRepository.findById(itemId).isEmpty()){
+            throw new TodoItemServiceException("Item not found", "itemId");
+        }
+        TodoItem item = todoItemRepository.findById(itemId).get();
+        item.setInProgress(false);
+        item.setCompleted(true);
+
+        todoItemRepository.save(item);
+        return item;
+    }
+
+    public TodoItem removeTodoItem(Long itemId, Long userId) throws TodoItemServiceException{
+        if(userRepository.findById(userId).isEmpty()){
+            throw new TodoItemServiceException("User not found", "userId");
+        }
+        User user = userRepository.findById(userId).get();
+        if(todoItemRepository.findById(itemId).isEmpty()){
+            throw new TodoItemServiceException("Item not found", "itemId");
+        }
+        
+        TodoItem item = todoItemRepository.findById(itemId).get();
+        user.removeTodoItem(item);
+        userRepository.save(user);
+        todoItemRepository.delete(item);
+        return item;
+    }
 }

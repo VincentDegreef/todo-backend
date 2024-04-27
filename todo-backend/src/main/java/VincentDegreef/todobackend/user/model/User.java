@@ -3,6 +3,7 @@ package VincentDegreef.todobackend.user.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import VincentDegreef.todobackend.project.model.Project;
 import VincentDegreef.todobackend.todoItem.model.TodoItem;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -36,6 +38,9 @@ public class User {
                 joinColumns = @JoinColumn(name="user_id"),
                 inverseJoinColumns = @JoinColumn(name="todo_id"))
     private List<TodoItem> todoItems;
+
+    @OneToMany(mappedBy = "projectOwner")
+    private List<Project> projects;
 
     public User() {
     }
@@ -88,6 +93,25 @@ public class User {
             todoItems = new ArrayList<>();
         }
         todoItems.add(todoItem);
+    }
+
+    public void removeTodoItem(TodoItem todoItem){
+        todoItems.remove(todoItem);
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void addProject(Project project){
+        if(projects == null){
+            projects = new ArrayList<>();
+        }
+        projects.add(project);
+    }
+
+    public void removeProject(Project project){
+        projects.remove(project);
     }
 
 

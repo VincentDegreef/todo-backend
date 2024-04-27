@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import VincentDegreef.todobackend.project.model.Project;
 import VincentDegreef.todobackend.todoItem.model.TodoItem;
 import VincentDegreef.todobackend.user.model.User;
 import VincentDegreef.todobackend.user.service.UserService;
@@ -65,6 +66,11 @@ public class UserRestController {
     @GetMapping("/userTodos/{userId}")
     public List<TodoItem> getUserTodos(@PathVariable Long userId) throws UserServiceException{
         return userService.getUserTodos(userId);
+    }
+
+    @GetMapping("/userProject/{userId}")
+    public List<Project> getUserProjects(@PathVariable Long userId) throws UserServiceException{
+        return userService.getUserProjects(userId);
     }
 
 

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import VincentDegreef.todobackend.project.model.Project;
 import VincentDegreef.todobackend.todoItem.model.TodoItem;
 import VincentDegreef.todobackend.user.model.User;
 import VincentDegreef.todobackend.user.repo.UserRepository;
@@ -56,6 +57,14 @@ public class UserService {
         }
         User user = userRepository.findUserById(id);
         return user.getTodoItems();
+    }
+
+    public List<Project> getUserProjects(Long id) throws UserServiceException{
+        if(userRepository.findUserById(id).getProjects().isEmpty()){
+            throw new UserServiceException("No projects found", "error");
+        }
+        User user = userRepository.findUserById(id);
+        return user.getProjects();
     }
 
 }
