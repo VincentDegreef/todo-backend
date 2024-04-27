@@ -20,15 +20,22 @@ public class TodoItem {
     @NotBlank(message = "Description is mandatory")
     private String description;
 
-    
+    private boolean notStarted;
+
+    private boolean inProgress;
+
     private boolean completed;
+
+    
 
     public TodoItem() {
     }
 
-    public TodoItem(String title, String description, boolean completed) {
+    public TodoItem(String title, String description, boolean notStarted, boolean inProgress ,boolean completed) {
         setTitle(title);
         setDescription(description);
+        setNotStarted(notStarted);
+        setInProgress(inProgress);
         setCompleted(completed);
     }
 
@@ -59,4 +66,21 @@ public class TodoItem {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public boolean isInProgress() {
+        return inProgress;
+    }
+
+    public void setInProgress(boolean inProgress) {
+        this.inProgress = inProgress;
+    }
+
+    public boolean isNotStarted() {
+        return notStarted;
+    }
+
+    public void setNotStarted(boolean notStarted) {
+        this.notStarted = notStarted;
+    }
+
 }

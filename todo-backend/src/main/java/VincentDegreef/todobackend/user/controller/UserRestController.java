@@ -10,12 +10,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import VincentDegreef.todobackend.todoItem.model.TodoItem;
 import VincentDegreef.todobackend.user.model.User;
 import VincentDegreef.todobackend.user.service.UserService;
 import VincentDegreef.todobackend.user.service.UserServiceException;
@@ -58,6 +60,11 @@ public class UserRestController {
     @GetMapping("")
     public List<User> getAllUsers() throws UserServiceException{
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/userTodos/{userId}")
+    public List<TodoItem> getUserTodos(@PathVariable Long userId) throws UserServiceException{
+        return userService.getUserTodos(userId);
     }
 
 
