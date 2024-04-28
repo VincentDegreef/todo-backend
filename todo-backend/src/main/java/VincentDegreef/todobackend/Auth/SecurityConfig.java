@@ -45,7 +45,7 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeRequests()
                 .requestMatchers("/rest/auth/**").permitAll()
-                .requestMatchers("/users", "/h2").permitAll()
+                .requestMatchers("/users", "/h2", "/todoItems").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);

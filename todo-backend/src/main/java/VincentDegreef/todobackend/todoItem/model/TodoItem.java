@@ -1,9 +1,14 @@
 package VincentDegreef.todobackend.todoItem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import VincentDegreef.todobackend.project.model.Project;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -25,6 +30,12 @@ public class TodoItem {
     private boolean inProgress;
 
     private boolean completed;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
 
     
 
@@ -81,6 +92,14 @@ public class TodoItem {
 
     public void setNotStarted(boolean notStarted) {
         this.notStarted = notStarted;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
 }

@@ -1,5 +1,7 @@
 package VincentDegreef.todobackend.todoItem.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +75,9 @@ public class TodoItemService {
         userRepository.save(user);
         todoItemRepository.delete(item);
         return item;
+    }
+
+    public List<TodoItem> getAllTodoItems(){
+        return todoItemRepository.findAll();
     }
 }

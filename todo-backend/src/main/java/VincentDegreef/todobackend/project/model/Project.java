@@ -1,15 +1,21 @@
 package VincentDegreef.todobackend.project.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import VincentDegreef.todobackend.todoItem.model.TodoItem;
 import VincentDegreef.todobackend.user.model.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -28,11 +34,17 @@ public class Project {
     private String projectDescription;
 
     private LocalDate projectCreationDate;
+    
+    private String projectInviteCode;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User projectOwner;
+
+
+    @OneToMany(mappedBy = "project")
+    private List<TodoItem> tasks;
 
     public Project() {
     }
@@ -66,6 +78,14 @@ public class Project {
         this.projectDescription = projectDescription;
     }
 
+    public String getProjectInviteCode() {
+        return projectInviteCode;
+    }
+
+    public void setProjectInviteCode(String projectInviteCode) {
+        this.projectInviteCode = projectInviteCode;
+    }
+
 
     public User getProjectOwner() {
         return projectOwner;
@@ -82,5 +102,26 @@ public class Project {
     public void setProjectCreationDate(LocalDate projectCreationDate) {
         this.projectCreationDate = projectCreationDate;
     }
+
+    public List<TodoItem> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<TodoItem> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void addTask(TodoItem task) {
+        if(tasks == null){
+            tasks = new ArrayList<>();
+        }
+        tasks.add(task);
+    }
+
+    public void removeTask(TodoItem task) {
+        tasks.remove(task);
+    }
+
+
 
 }

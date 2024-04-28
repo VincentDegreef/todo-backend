@@ -6,6 +6,7 @@ import java.util.List;
 import VincentDegreef.todobackend.project.model.Project;
 import VincentDegreef.todobackend.todoItem.model.TodoItem;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,7 +40,8 @@ public class User {
                 inverseJoinColumns = @JoinColumn(name="todo_id"))
     private List<TodoItem> todoItems;
 
-    @OneToMany(mappedBy = "projectOwner")
+
+    @OneToMany(mappedBy = "projectOwner" ,fetch=FetchType.EAGER)
     private List<Project> projects;
 
     public User() {
