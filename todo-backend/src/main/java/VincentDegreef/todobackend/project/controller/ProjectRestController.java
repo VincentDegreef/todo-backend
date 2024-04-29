@@ -29,6 +29,11 @@ public class ProjectRestController {
     public ProjectRestController() {
     }
 
+    @GetMapping("")
+    public List<Project> getAllProjects() {
+        return projectService.getAllProjects();
+    }
+
 
     @PostMapping("/create/{userId}")
     public Project createProject(@RequestBody Project project, @PathVariable Long userId) {

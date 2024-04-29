@@ -7,9 +7,9 @@ public class LoginRes {
     private String username;
 
     public LoginRes(Long id, String email, String token, String username) {
+        this.id = id;
         this.email = email;
         this.token = token;
-        this.id = id;
         this.username = username;
 
     }

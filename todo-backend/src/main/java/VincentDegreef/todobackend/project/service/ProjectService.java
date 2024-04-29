@@ -125,5 +125,9 @@ public class ProjectService {
         return project.getTasks();
     }
 
+    public List<Project> getAllProjects(){
+        return projectRepository.findAll();
+    }
+
     
 }
