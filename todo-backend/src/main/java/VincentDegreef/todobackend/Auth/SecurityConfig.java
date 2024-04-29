@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import VincentDegreef.todobackend.user.service.CustomUserDetailsService;
@@ -18,7 +19,7 @@ import VincentDegreef.todobackend.user.service.CustomUserDetailsService;
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig{
     
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
@@ -44,14 +45,31 @@ public class SecurityConfig {
 
         http.csrf().disable()
                 .authorizeRequests()
-                .requestMatchers("/rest/auth/**").permitAll()
-                .requestMatchers("/users", "/h2", "/todoItems").permitAll()
+                .requestMatchers("/rest/auth/**","/h2").permitAll()
+                .requestMatchers("/users", "/todoItems", "/projects").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+    // @Bean
+    // public AccessDeniedHandler accessDeniedHandler() {
+    //     return (request, response, accessDeniedException) -> {
+    //         // Custom logic for handling access denied
+    //         response.sendRedirect("/access-denied");
+    //     };
+    // }
+
+    // @Override
+    // protected void configure(HttpSecurity http) throws Exception {
+    //     http
+    //         .exceptionHandling()
+    //             .accessDeniedHandler(accessDeniedHandler())
+    //             .and()
+    //         // Other configurations
+    // }
 
 
     @Bean

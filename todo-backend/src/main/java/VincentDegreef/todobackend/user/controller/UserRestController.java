@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,16 +59,20 @@ public class UserRestController {
 
     public UserRestController() {}
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public List<User> getAllUsers() throws UserServiceException{
         return userService.getAllUsers();
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @GetMapping("/userTodos/{userId}")
     public List<TodoItem> getUserTodos(@PathVariable Long userId) throws UserServiceException{
         return userService.getUserTodos(userId);
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @GetMapping("/userProject/{userId}")
     public List<Project> getUserProjects(@PathVariable Long userId) throws UserServiceException{
         return userService.getUserProjects(userId);

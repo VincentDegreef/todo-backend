@@ -1,6 +1,9 @@
 package VincentDegreef.todobackend.Auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import VincentDegreef.todobackend.user.model.User;
+import VincentDegreef.todobackend.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,11 +32,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
     private final JwtUtil jwtUtil;
     @Autowired
     private final ObjectMapper mapper;
+    @Autowired
+    private final UserService userService;
 
     @Autowired
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, ObjectMapper mapper) {
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, ObjectMapper mapper, UserService userService) {
         this.jwtUtil = jwtUtil;
         this.mapper = mapper;
+        this.userService = userService;
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -50,9 +56,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
             if(claims != null & jwtUtil.validateClaims(claims)){
                 String email = claims.getSubject();
+                User user = userService.getByEmail(email);
                 System.out.println("email : "+email);
                 Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(email,"",new ArrayList<>());
+                        new UsernamePasswordAuthenticationToken(email,"",user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 

@@ -3,6 +3,7 @@ package VincentDegreef.todobackend.request.model;
 public class LoginReq {
     private String email;
     private String password;
+    
 
     public LoginReq(String email, String password) {
         this.email = email;

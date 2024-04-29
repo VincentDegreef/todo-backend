@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +30,14 @@ public class ProjectRestController {
     public ProjectRestController() {
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public List<Project> getAllProjects() {
         return projectService.getAllProjects();
     }
 
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @PostMapping("/create/{userId}")
     public Project createProject(@RequestBody Project project, @PathVariable Long userId) {
         try {
@@ -44,6 +47,7 @@ public class ProjectRestController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @GetMapping("/{projectId}")
     public Project getProjectById(@PathVariable Long projectId) {
         try {
@@ -52,7 +56,7 @@ public class ProjectRestController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @DeleteMapping("/delete/{projectId}/{userId}")
     public Project deleteProject(@PathVariable Long projectId, @PathVariable Long userId) {
         try {
@@ -62,6 +66,7 @@ public class ProjectRestController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @PostMapping("/addTask/{projectId}")
     public Project addTaskToProject(@RequestBody TodoItem todoItem, @PathVariable Long projectId) {
         try {
@@ -71,6 +76,7 @@ public class ProjectRestController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @DeleteMapping("/deleteTask/{projectId}/{taskId}")
     public Project deleteTaskFromProject(@PathVariable Long projectId, @PathVariable Long taskId) {
         try {
@@ -80,6 +86,7 @@ public class ProjectRestController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     @GetMapping("/tasks/{projectId}")
     public List<TodoItem> getTasksFromProject(@PathVariable Long projectId) {
         try {

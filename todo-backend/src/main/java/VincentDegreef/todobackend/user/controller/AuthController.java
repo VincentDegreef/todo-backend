@@ -2,6 +2,7 @@ package VincentDegreef.todobackend.user.controller;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import VincentDegreef.todobackend.Auth.JwtUtil;
 import VincentDegreef.todobackend.response.model.ErrorRes;
 import VincentDegreef.todobackend.response.model.LoginRes;
+import VincentDegreef.todobackend.roles.model.Role;
+import VincentDegreef.todobackend.roles.service.RoleService;
 import VincentDegreef.todobackend.user.model.User;
 import VincentDegreef.todobackend.user.service.UserService;
 import VincentDegreef.todobackend.user.service.UserServiceException;
@@ -39,6 +42,9 @@ public class AuthController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleService roleService;
 
 
     private JwtUtil jwtUtil;
@@ -83,7 +89,8 @@ public class AuthController {
             String token = jwtUtil.createToken(user);
             Long id = user.getId();
             String username = user.getUsername();
-            LoginRes loginRes = new LoginRes(id, email,token ,username);
+            String role = user.getRole().getName();
+            LoginRes loginRes = new LoginRes(id, email,token ,username, role);
 
             return ResponseEntity.ok(loginRes);
 
@@ -100,7 +107,23 @@ public class AuthController {
     public User createUser(@Valid @RequestBody User newUser) throws UserServiceException {
         String hashedPassword = passwordEncoder.encode(newUser.getPassword());
         newUser.setPassword(hashedPassword);
-        
+
+        // Check if the role is already persisted or not
+        Role role = newUser.getRole();
+        if (role != null && role.getId() == null) {
+            // Role is transient, so persist it
+            roleService.saveRole(role); // Assuming you have a service for managing roles
+        }
+
+        // Now the role should be persisted, so you can safely create the user
         return userService.createUser(newUser);
-    } 
+    }
+
+    // @PostMapping("/register")
+    // public User createUser(@Valid @RequestBody User newUser) throws UserServiceException {
+    //     String hashedPassword = passwordEncoder.encode(newUser.getPassword());
+    //     newUser.setPassword(hashedPassword);
+        
+    //     return userService.createUser(newUser);
+    // }
 }
