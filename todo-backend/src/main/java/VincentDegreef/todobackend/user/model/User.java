@@ -54,7 +54,11 @@ public class User implements UserDetails {
     private List<TodoItem> todoItems;
 
 
-    @OneToMany(mappedBy = "projectOwner" ,fetch=FetchType.EAGER)
+    // @OneToMany(mappedBy = "projectOwner" ,fetch=FetchType.EAGER)
+    @ManyToMany
+    @JoinTable( name="user_projects",
+                joinColumns = @JoinColumn(name="user_id"),
+                inverseJoinColumns = @JoinColumn(name="project_id"))
     private List<Project> projects;
 
     public User() {

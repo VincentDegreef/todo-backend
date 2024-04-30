@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import VincentDegreef.todobackend.user.service.CustomUserDetailsService;
 
@@ -46,7 +49,7 @@ public class SecurityConfig{
         http.csrf().disable()
                 .authorizeRequests()
                 .requestMatchers("/rest/auth/**","/h2").permitAll()
-                .requestMatchers("/users", "/todoItems", "/projects").hasRole("ADMIN")
+                // .requestMatchers("/users", "/todoItems", "/projects").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);
@@ -69,6 +72,18 @@ public class SecurityConfig{
     //             .accessDeniedHandler(accessDeniedHandler())
     //             .and()
     //         // Other configurations
+    // }
+
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration configuration = new CorsConfiguration();
+    //     configuration.addAllowedOrigin("http://localhost:3000");
+    //     // configuration.addAllowedOrigin("https://group26-frontend.azurewebsites.net"); // Allow requests from http://localhost:3000
+    //     configuration.addAllowedMethod("*"); // Allow all HTTP methods
+    //     configuration.addAllowedHeader("*"); // Allow all headers
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", configuration);
+    //     return source;
     // }
 
 

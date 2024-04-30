@@ -41,11 +41,27 @@ public class ProjectService {
 
         project.setProjectInviteCode(Integer.toString(random));
 
-        project.setProjectOwner(projectUser);
+        project.addProjectMember(projectUser);
+        project.setProjectOwner(projectUser.getUsername());
         projectRepository.save(project);
         projectUser.addProject(project);
         userRepository.save(projectUser);
+        return project;
+    }
 
+    public Project joinProject(Long userId, String code) throws ProjectServiceException{
+        if(userRepository.findUserById(userId) == null){
+            throw new ProjectServiceException("User does not exist", "userId");
+        }
+        if(projectRepository.findProjectByProjectInviteCode(code) == null){
+            throw new ProjectServiceException("Project does not exist", "code");
+        }
+        Project project = projectRepository.findProjectByProjectInviteCode(code);
+        User projectUser = userRepository.findUserById(userId);
+        project.addProjectMember(projectUser);
+        projectRepository.save(project);
+        projectUser.addProject(project);
+        userRepository.save(projectUser);
         return project;
     }
 

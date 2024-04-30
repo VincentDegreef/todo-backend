@@ -9,4 +9,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     public Project findByProjectName(String projectName);
 
     public Project findProjectById(Long id);
+
+    public Project findProjectByProjectInviteCode(String code);
 }

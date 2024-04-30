@@ -96,4 +96,14 @@ public class ProjectRestController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
+    @PostMapping("/join/{userId}/{inviteCode}")
+    public Project joinProject(@PathVariable Long userId, @PathVariable String inviteCode) {
+        try {
+            return projectService.joinProject( userId, inviteCode);
+        } catch (ProjectServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
 }

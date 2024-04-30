@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -37,10 +38,16 @@ public class Project {
     
     private String projectInviteCode;
 
+    private String projectOwner;
+
+    // @JsonIgnore
+    // @ManyToOne(fetch = FetchType.EAGER)
+    // @JoinColumn(name = "user_id")
+    // private User projectOwner;
+
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User projectOwner;
+    @ManyToMany(mappedBy = "projects")
+    private List<User> projectMembers;
 
 
     @OneToMany(mappedBy = "project")
@@ -87,12 +94,39 @@ public class Project {
     }
 
 
-    public User getProjectOwner() {
+    // public User getProjectOwner() {
+    //     return projectOwner;
+    // }
+
+    // public void setProjectOwner(User projectOwner) {
+    //     this.projectOwner = projectOwner;
+    // }
+
+    public String getProjectOwner() {
         return projectOwner;
     }
 
-    public void setProjectOwner(User projectOwner) {
+    public void setProjectOwner(String projectOwner) {
         this.projectOwner = projectOwner;
+    }
+
+    public List<User> getProjectMembers() {
+        return projectMembers;
+    }
+
+    public void setProjectMembers(List<User> projectMembers) {
+        this.projectMembers = projectMembers;
+    }
+
+    public void addProjectMember(User user) {
+        if(projectMembers == null){
+            projectMembers = new ArrayList<>();
+        }
+        projectMembers.add(user);
+    }
+
+    public void removeProjectMember(User user) {
+        projectMembers.remove(user);
     }
 
     public LocalDate getProjectCreationDate() {
