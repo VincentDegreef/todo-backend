@@ -58,6 +58,9 @@ public class ProjectService {
         }
         Project project = projectRepository.findProjectByProjectInviteCode(code);
         User projectUser = userRepository.findUserById(userId);
+        if(project.getProjectMembers().contains(projectUser)){
+            throw new ProjectServiceException("User is already a member of this project", "userId");
+        }
         project.addProjectMember(projectUser);
         projectRepository.save(project);
         projectUser.addProject(project);
