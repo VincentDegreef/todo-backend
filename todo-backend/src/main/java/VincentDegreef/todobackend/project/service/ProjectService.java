@@ -85,10 +85,17 @@ public class ProjectService {
 
         Project project = projectRepository.findProjectById(projectId);
         User projectUser = userRepository.findUserById(userId);
+
+        if(!project.getProjectOwner().equals(projectUser.getUsername())){
+            throw new ProjectServiceException("User is not the owner of this project", "userId");
+        }
         project.setTasks(null);
         projectRepository.save(project);
-        projectUser.removeProject(project);
-        userRepository.save(projectUser);
+
+        for(User user : project.getProjectMembers()){
+            user.removeProject(project);
+            userRepository.save(user);
+        }
         projectRepository.delete(project);
         return project;
     }
@@ -146,6 +153,26 @@ public class ProjectService {
 
     public List<Project> getAllProjects(){
         return projectRepository.findAll();
+    }
+
+    public Project leaveProject(Long projectId, Long userId) throws ProjectServiceException{
+        if(projectRepository.findProjectById(projectId) == null){
+            throw new ProjectServiceException("Project does not exist", "projectId");
+        }
+        if(userRepository.findUserById(userId) == null){
+            throw new ProjectServiceException("User does not exist", "userId");
+        }
+        Project project = projectRepository.findProjectById(projectId);
+        User projectUser = userRepository.findUserById(userId);
+
+        if(project.getProjectOwner().equals(projectUser.getUsername())){
+            throw new ProjectServiceException("Owner cannot leave project", "userId");
+        }
+        project.removeProjectMember(projectUser);
+        projectRepository.save(project);
+        projectUser.removeProject(project);
+        userRepository.save(projectUser);
+        return project;
     }
 
     

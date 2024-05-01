@@ -1,17 +1,22 @@
 package VincentDegreef.todobackend.project.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +31,30 @@ import VincentDegreef.todobackend.todoItem.model.TodoItem;
 public class ProjectRestController {
     @Autowired
     private ProjectService projectService;
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST )
+    @ExceptionHandler({
+    MethodArgumentNotValidException.class})
+    public Map<String, String>
+    handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getFieldErrors().forEach((error) -> {
+            String fieldName = error.getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
+
+    
+    @ResponseStatus(HttpStatus.BAD_REQUEST )
+    @ExceptionHandler({ ProjectServiceException.class})
+    public Map<String, String>
+    handleServiceExceptions(ProjectServiceException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ex.getField(), ex.getMessage());
+        return errors;
+    }
 
     public ProjectRestController() {
     }
@@ -106,4 +135,13 @@ public class ProjectRestController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
+    @DeleteMapping("/leave/{userId}/{projectId}")
+    public Project leaveProject(@PathVariable Long userId, @PathVariable Long projectId) {
+        try {
+            return projectService.leaveProject(projectId, userId);
+        } catch (ProjectServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
 }
